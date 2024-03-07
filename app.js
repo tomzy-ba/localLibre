@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require("mongoose");
 
+
+
 mongoose.set("strictQuery", false);
 
 const mongoDB = "mongodb+srv://dummyuser:dummyuser123@cluster0.kdk4tlz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -23,10 +25,9 @@ const ExampleSchema = new Schema({
 
 const SomeModel = mongoose.model("SomeModel", ExampleSchema);
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 var app = express();
+const catalogRouter = require("./routes/catalog");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,9 +38,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/catalog/", catalogRouter);
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
