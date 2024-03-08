@@ -1,17 +1,30 @@
 var createError = require('http-errors');
 var express = require('express');
-var app = express();
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const compression = require("compression");
+const helmet = require("helmet");
+require("dotenv").config();
 
 const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const catalogRouter = require("./routes/catalog");
 
+var app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(compression());
+app.use(
+
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["['self'", "code.jquery.com",
+      "cdn.jsdelivr.net"],
+    },
+  }),
+)
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
@@ -46,7 +59,7 @@ app.use(function(err, req, res, next) {
 
 mongoose.set("strictQuery", false);
 
-const mongoDB = "mongodb+srv://dummyuser:dummyuser123@cluster0.kdk4tlz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoDB = process.env.mongoDB;
 
 main().catch((err) => console.log(err));
 async function main() {
