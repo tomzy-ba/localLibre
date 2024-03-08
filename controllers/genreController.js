@@ -1,7 +1,7 @@
 const Genre = require("../models/genre");
 const asyncHandler = require("express-async-handler");
 const Book = require("../models/book");
-const {body, validationResult } = require("express-validator");
+const { body, validationResult } = require("express-validator");
 
 
 // Display list of all Genre.
@@ -42,7 +42,9 @@ exports.genre_create_get = (req, res, next) => {
 
 
 // Handle Genre create on POST.
-exports.genre_create_post = [
+exports.genre_create_post = 
+
+[
   // Validate and sanitize the name field.
   body("name", "Genre name must contain at least 3 characters")
     .trim()
@@ -55,7 +57,7 @@ exports.genre_create_post = [
     const errors = validationResult(req);
 
     // Create a genre object with escaped and trimmed data.
-    const genre = new Genre({ name: req.body.name });
+    const genre = new Genre({ name: req.body.name});
 
     if (!errors.isEmpty()) {
       // There are errors. Render the form again with sanitized values/error messages.
@@ -68,7 +70,7 @@ exports.genre_create_post = [
     } else {
       // Data from form is valid.
       // Check if Genre with same name already exists.
-      const genreExists = await Genre.findOne({ name: req.body.name }).exec();
+      const genreExists = await Genre.findOne({ name: req.body.name}).exec();
       if (genreExists) {
         // Genre exists, redirect to its detail page.
         res.redirect(genreExists.url);

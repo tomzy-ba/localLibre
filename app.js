@@ -4,31 +4,14 @@ var app = express();
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
 const mongoose = require("mongoose");
-
-
-
-mongoose.set("strictQuery", false);
-
-const mongoDB = "mongodb+srv://dummyuser:dummyuser123@cluster0.kdk4tlz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-main().catch((err) => console.log(err));
-async function main() {
-  await mongoose.connect(mongoDB);
-}
-
-const Schema = mongoose.Schema;
-
-const ExampleSchema = new Schema({
-  a_string: String,
-  a_date: Date,
-});
-
-
-
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const catalogRouter = require("./routes/catalog");
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
@@ -41,8 +24,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -61,6 +42,22 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+mongoose.set("strictQuery", false);
+
+const mongoDB = "mongodb+srv://dummyuser:dummyuser123@cluster0.kdk4tlz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+}
+
+const Schema = mongoose.Schema;
+
+const ExampleSchema = new Schema({
+  a_string: String,
+  a_date: Date,
 });
 
 module.exports = app;
