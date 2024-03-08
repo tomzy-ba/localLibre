@@ -24,7 +24,6 @@ const ExampleSchema = new Schema({
   a_date: Date,
 });
 
-const SomeModel = mongoose.model("SomeModel", ExampleSchema);
 
 
 const indexRouter = require("./routes/index");
